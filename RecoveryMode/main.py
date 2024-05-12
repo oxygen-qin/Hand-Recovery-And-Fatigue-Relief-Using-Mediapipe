@@ -19,9 +19,10 @@ mainClock = pygame.time.Clock()
 fps_font = pygame.font.SysFont("Silver.ttf", 22)
 
 # Music ----------------------------------------------------------- #
-# pygame.mixer.music.load("Assets/Sounds/background.mp3")
-# pygame.mixer.music.set_volume(MUSIC_VOLUME)
-# pygame.mixer.music.play(-1)
+pygame.mixer.music.load("Assets/Sounds/background.mp3")
+pygame.mixer.music.set_volume(MUSIC_VOLUME)
+pygame.mixer.music.play(-1)
+game_muted = 0
 
 # Statement ------------------------------------------------------- #
 game_paused = False
@@ -35,7 +36,7 @@ button_mute = button.Button("mute")
 
 
 def user_events():
-    global game_paused
+    global game_paused, game_muted
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
@@ -64,6 +65,15 @@ def user_events():
             elif button_next.rect.collidepoint(event.pos):
                 print("Next Gesture button clicked!")
                 game.next_gesture()
+            elif button_mute.rect.collidepoint(event.pos):
+                print("Mute button clicked!")
+                if game_muted:
+                    pygame.mixer.music.set_volume(MUSIC_VOLUME)
+                    game_muted = 0
+                else:
+                    pygame.mixer.music.set_volume(0)
+                    game_muted = 1
+
 
 
 def update():
@@ -77,9 +87,10 @@ def draw_buttons():
     button_next.draw_button(SCREEN)
     button_mute.draw_button(SCREEN)
 
+
 SCREEN.blit(background, background_rect)
-SCREEN.blit(video_background,video_back_rect)
-SCREEN.blit(bar,bar_rect)
+SCREEN.blit(video_background, video_back_rect)
+SCREEN.blit(bar, bar_rect)
 # Loop ------------------------------------------------------------ #
 while True:
 
